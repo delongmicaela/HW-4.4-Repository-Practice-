@@ -1,28 +1,24 @@
 # Project Title
 
-Write a 1-2 sentences that quickly and clearly convey what your repo is for.
+Repository was created in order to show students' (Micaela's) understanding of what has been discussed in class over the past week(s). 
 
 ## Overview
 
-Expand on those introductory sentences with a brief but informative description of your project's purpose and goals. This section should help visitors decide whether they should dig deeper into your repo/project.
-
-### Interesting Insight (Optional)
-
-This is optional but highly recommended. You'll include one interesting insight from your project as part of the README. This insight is most effective when you include a visual. Keep in mind that this visual must be included as an image file (e.g., JPG, PNG, etc.). You can export plots created with `{ggplot2}` by using the function `ggsave`.
+In this repository we have the demonstrated the understanding on how to use/create a branch, issues feature, how to properly set commit and pull requests, a plan for the repo and HW #4.3 and lastly the files necessary for HW #4.3. 
 
 ## Data Sources and Acknowledgements
 
-Be sure to list where you got any data used within the project. Be sure to acknowledge any one whose work or elements you're drawing upon.
+Got repository template from STAT 184 Spring Organization that provided template to use (was public). 
 
 ## Current Plan
 
-Provide some information about what you intend to doe with the project. You can additionally refer the visitor to your detailed plan document.
+What I plan to do is show that I am properly able to understand and use GitHub for future projects, such as the end of semester project. 
 
 ## Repo Structure
 
-Use this section to explain the structure of your repo. This should help visitors quickly figure out where they should look to find certain elements. Further, you can use this space to highlight and briefly explain important/key files in the repo.
+I have created a seperate branch from the main specifically for the previous HW assignment, 4.3. This will be to help the viewer to see all work and uploads in one area. That the repository is properly organized. 
 
 
 ## Authors
 
-Give information about who are the authors of the project and how people can get in touch if they have questions.
+Micaela DeLong via mpd6024@psu.edu
