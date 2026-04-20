@@ -1,0 +1,209 @@
+---
+title: "HW #4.3: Reproducible Data Analysis"
+author: "Micaela DeLong"
+format: html
+---
+
+## Busiest Airport Analysis
+
+#Analysis:
+
+#Table and Plot/Graph with Narrative Text:
+
+## Monte Carlo Numerical Integration
+
+#Numeric Integration: By using the Monte Carlo approach in the numeric integration of resolution with the function we can see that it defines a normal curve. In order to get this result we need to be able to determine whether the random sampling points fall within or outside the given bounds of our function. Then generating multiple simulations, n=10, n=10, etc (as we can see from HW3.4). With more points we are able to see a more clearer curve.
+
+#Visualizations:
+
+## Planning and Prompting GenAI Tools
+
+## My Plan
+
+Went online to kaggle and found cereal data set. Decided to look at the relationship between fiber and carbs in cereals. From this I had ChatGPT create a visualization from the tidied data. I am expecting to see some linear relationship between them. As the amount of carbs in the cereal is increase the amount of fiber is decreased.
+
+Giving the prompt: please creata a visualization from the given data in the url: https://www.kaggle.com/datasets/crawford/80-cereals?resource=download looking at a realtionship between fiber and carbs in cereal
+
+## Reflection
+
+Over the course of the semester I have learned the importance of planning. Setting your goals and steps in order to have a better and easy streamline process of creating code to make visualizations and analysis therefore after. In almost every homework we have done that involves code we start off by setting our goals, identifying verbs/nouns and then creating steps on how we mean to achieve said goal(s).By doing this I am better to understand how to go about the assignment and make it easier for me to look back at my work and see what I did. Using the steps in my code as well. You can see this in the last homework with the Monte Carlo work. By being able to have these steps I am better to set myself up for success. Secondly, I've learned to better document my work. Before I would simply outline what I did as I could see in my earlier work. But now I document more why I did a certain approach, like in the Monte Carlo Numerical Integration. This is also beneficial to others who will look at my code.
+
+## Appendices ----
+
+# GenAI Usage:
+
+Used ChatGPT on April 15th 2026 to generate a visualization of a plot/graph in part C of the assignment. Using version 5.3. Giving it the prompt: please creata a visualization from the given data in the url: https://www.kaggle.com/datasets/crawford/80-cereals?resource=download looking at a realtionship between fiber and carbs in cereal. As mentioned earlier in the assignment.
+
+# Code:
+```{r}
+
+##Airport Code
+## Install libraries
+library(rvest)
+library(dplyr)
+library(stringr)
+library(tidyr)
+
+## Load URL
+
+airports_url <- "https://en.wikipedia.org/wiki/List_of_busiest_airports_by_passenger_traffic"
+
+## Inspect/read all the tables
+tables <- read_html(airports_url) |>
+  html_elements("table") |>
+  html_table()
+
+## Select the tables and airports needed
+airports_needed <- c('ATL','FRA', 'PKX', 'HND', 'ORD', 'IST')
+
+## Grab data and add year columns
+airports_2025 <- tables[[2]] |> mutate(year = 2025, .before = Rank)
+airports_2024 <- tables[[3]] |> mutate(year = 2024, .before = Rank)
+airports_2023 <- tables[[4]] |> mutate(year = 2023, .before = Rank)
+airports_2022 <- tables[[5]] |> mutate(year = 2022, .before = Rank)
+airports_2021 <- tables[[6]] |> mutate(year = 2021, .before = Rank)
+airports_2020 <- tables[[7]] |> mutate(year = 2020, .before = Rank)
+#then put this into one data set
+airport_data <- bind_rows(
+  airports_2020,
+  airports_2021,
+  airports_2022,
+  airports_2023,
+  airports_2024,
+  airports_2025
+)
+#lastly we'll clean up the data
+airport_data_20to25 <- airport_data |>
+  rename(
+    passengers = Totalpassengers,
+    percentChange = `%change`
+  ) |>
+  separate_wider_delim(
+    cols = `Code(IATA/ICAO)`,
+    delim = "/",
+    names = c("IATA", "ICAO"),
+    too_few = "align_start",
+    too_many = "merge"
+  ) |>
+  filter(IATA %in% airports_needed) |>
+  mutate(
+    across(c(passengers, percentChange), parse_number)
+  )
+
+airport_data_20to25
+```
+
+```{r}
+## Monte Carlo Code
+
+## Make function for simulation 
+mc_simulation <- function(n, x_min, x_max, y_min, y_max) {
+  
+  x <- runif(n, x_min, x_max)
+  y <- runif(n, y_min, y_max)
+  
+  df <- data.frame(x, y)
+  
+  return(df)
+}
+## Generate random values for x and y bounds
+## Also need to create data frame to input randomly generate bounds
+## so that we can later plot
+## Instead of having empty vectors and generating each point randomly we
+## can generate all the values at once given the number, n. loops we choose
+
+
+## Add needed libraries
+library(ggplot2)
+
+## Define bounds
+x_min <- 0
+x_max <- 1
+y_min <- 0
+y_max <- 1.5
+
+## Area of a Rectangle function
+area_of_rect <- (x_max - x_min)*(y_max - y_min)
+
+## Search for value at each x
+df$fx <- dbeta(df$x, shape1 = 2, shape2 = 2)
+
+## Double check that the point/value is under the curve as seen in information given
+df$flag <- ifelse(df$y <= df$fx, "on/below", "above")
+#If the point is inside then we have to estimate it later
+#computing the,p, proportion of them
+count_under <- sum(df$flag == "on/below")
+total_points <- nrow(df)
+p <- count_under / total_points
+
+##Estimate intergral
+estimate <- p*area_of_rect
+
+
+##plot graph
+ggplot(df, aes(x = x, y = y, color = flag)) + 
+  geom_point() + 
+  stat_function(
+    fun = dbeta,
+    args = list(shape1 = 2, shape2 = 2),
+    xlim = c(0, 1)
+  ) + 
+  labs(
+    title = "Monte Carlo Integration",
+    x = "x",
+    y = "y"
+  )
+```
+
+```{r}
+##Cereal Code 
+"""Original ChatGPT response code
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(janitor)
+
+# Import dataset
+cereal <- read_csv("cereal.csv") %>%
+  clean_names()
+
+# Quick check of column names
+names(cereal)
+
+# Create scatter plot
+ggplot(cereal, aes(x = fiber, y = carbo)) +
+  geom_point(color = "blue", alpha = 0.7, size = 3) +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(
+    title = "Relationship Between Fiber and Carbohydrates in Cereals",
+    x = "Fiber (grams)",
+    y = "Carbohydrates (grams)"
+  ) +
+  theme_minimal()
+"""
+# Version I use that is simpler (uses less libraries)
+# Install libraries
+library(tidyverse)
+library(readr)
+
+# Load dataset
+cereal <- read_csv("C:/Users/delon/Downloads/archive (4)/cereal.csv")
+View(cereal)
+
+# Inspect/Look at data
+glimpse(cereal)
+
+# Scatterplot: Carbs vs Fiber
+ggplot(cereal, 
+  aes(x = fiber, y = carbo)) +
+  geom_point(color = "blue", alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(
+    title = "Relationship Between Fiber and Carbohydrates in Cereals",
+    x = "Fiber (grams)",
+    y = "Carbohydrates (grams)"
+  ) +
+  theme_minimal()
+
+```
+
