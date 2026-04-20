@@ -1,4 +1,4 @@
-# Project Title
+# HW #4.4: GitHub Practice
 
 Repository was created in order to show students' (Micaela's) understanding of what has been discussed in class over the past week(s). 
 
